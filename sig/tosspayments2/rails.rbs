@@ -26,13 +26,26 @@ module Tosspayments2
       def confirm: (payment_key: String, order_id: String, amount: Integer) -> Hash[Symbol, untyped]
       def cancel: (payment_key: String, cancel_reason: String, ?amount: Integer) -> Hash[Symbol, untyped]
     end
+    class CallbackVerifier
+  def match_amount?: (order_id: String, amount: Integer) { (String) -> Integer } -> bool
+    end
+    class APIError < StandardError
+      @status: Integer
+      @body: Hash[Symbol, untyped]?
+      @code: String?
+      attr_reader status: Integer
+      attr_reader body: Hash[Symbol, untyped]?
+      attr_reader code: String?
+    end
+    class VerificationError < StandardError; end
+    class ConfigurationError < StandardError; end
 
     module ControllerConcern
     end
 
     class WebhookVerifier
       def initialize: (?secret_key: String) -> void
-      def verify: (untyped, untyped) -> bool
+  def verify?: (untyped, untyped) -> bool
     end
 
     def self.configure: () { (Configuration) -> void } -> Configuration

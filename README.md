@@ -1,5 +1,7 @@
 # tosspayments2-rails
 
+English section follows Korean (Scroll down for English usage guide).
+
 Rails 7 & 8용 TossPayments v2 (통합 SDK / 결제위젯) 간편 연동 지원 젬.
 
 * View helper (`tosspayments_script_tag`) 로 SDK `<script>` 주입
@@ -67,7 +69,7 @@ config.tosspayments2.secret_key = ENV['TOSSPAYMENTS_SECRET_KEY']
 		const customerKey = 'customer_123'; // 구매자 식별 값
 		const tosspayments = TossPayments(clientKey);
 		const widgets = tosspayments.widgets({ customerKey });
-		await widgets.setAmount({ value: 10000, currency: 'KRW' });
+성공 리다이렉트에서 요청 파라미터(`paymentKey`, `orderId`, `amount`)를 저장된 주문과 비교하려면 `CallbackVerifier` 사용:
 		await widgets.renderPaymentMethods({ selector: '#payment-methods' });
 		await widgets.renderAgreement({ selector: '#agreement' });
 
@@ -101,8 +103,8 @@ class PaymentsController < ApplicationController
 		result = toss_client.confirm(payment_key: payment_key, order_id: order_id, amount: amount)
 		# 비즈니스 로직 (주문 상태 업데이트 등)
 		@payment = result
-	rescue Tosspayments2::Rails::Client::HTTPError => e
-		logger.error("Toss confirm error: #{e.response.inspect}")
+		rescue Tosspayments2::Rails::APIError => e
+			logger.error("Toss confirm error status=#{e.status} code=#{e.code} body=#{e.body.inspect}")
 		redirect_to root_path, alert: '결제 승인 실패'
 	end
 
@@ -127,6 +129,50 @@ end
 toss_client.cancel(payment_key: payment.payment_key, cancel_reason: '고객요청')
 ```
 
+## 콜백 파라미터 검증 (선택)
+```ruby
+verifier = Tosspayments2::Rails::CallbackVerifier.new
+verifier.match_amount?(order_id: params[:orderId], amount: params[:amount].to_i) do |order_id|
+	Order.find_by!(uuid: order_id).amount
+end
+```
+불일치 시 `Tosspayments2::Rails::VerificationError` 예외 발생.
+
+## Webhook 검증
+```ruby
+verifier = Tosspayments2::Rails::WebhookVerifier.new
+raw_body = request.raw_post
+signature = request.headers['X-TossPayments-Signature']
+unless verifier.verify?(raw_body, signature)
+	head :unauthorized and return
+end
+payload = JSON.parse(raw_body)
+# 이벤트 처리
+```
+
+## Rails Generator
+빠른 초기 세팅:
+```bash
+bin/rails generate tosspayments2:install
+```
+생성물:
+* `config/initializers/tosspayments2.rb`
+* 예시 컨트롤러 `app/controllers/payments_controller.rb` (옵션, 덮어쓰기 여부 질의)
+* 안내 주석
+
+## RSpec 설정 & 테스트 실행
+프로젝트 루트에서(엔진 개발 환경):
+```bash
+bundle exec rspec
+```
+커버리지 보고서는 `coverage/` (SimpleCov) 생성.
+
+## YARD 문서 생성
+```bash
+bundle exec yard doc
+open doc/index.html
+```
+
 ## RBS (타입 시그니처)
 `sig/` 디렉토리에 기본 시그니처가 포함되어 있습니다. 필요 시 확장하세요.
 
@@ -141,6 +187,85 @@ client = Tosspayments2::Rails::Client.new(secret_key: 'sk_test_xxx')
 ```
 
 ## 라이선스
+MIT
+
+---
+
+## English
+
+### Overview
+Helpers & a lightweight engine to integrate TossPayments (Payment Widget v2) with Rails 7 & 8.
+
+Features:
+* Script tag helper (`toss_payments_script_tag` / actually `tosspayments_script_tag`)
+* Configuration block (`Tosspayments2::Rails.configure`)
+* Server-side confirm & cancel client
+* Controller concern for quick access (`toss_client`)
+* Callback parameter verification (order id & amount)
+* Webhook HMAC (SHA256 + Base64) verification helper
+
+### Installation
+```ruby
+gem 'tosspayments2-rails'
+```
+```bash
+bundle install
+```
+
+### Configuration
+```ruby
+Tosspayments2::Rails.configure do |c|
+	c.client_key = ENV['TOSSPAYMENTS_CLIENT_KEY']
+	c.secret_key = ENV['TOSSPAYMENTS_SECRET_KEY']
+end
+```
+
+### Script Tag
+In layout head:
+```erb
+<%= tosspayments_script_tag %>
+```
+
+### Success Redirect Controller
+```ruby
+class PaymentsController < ApplicationController
+	include Tosspayments2::Rails::ControllerConcern
+	def success
+		result = toss_client.confirm(payment_key: params[:paymentKey], order_id: params[:orderId], amount: params[:amount].to_i)
+		@payment = result
+	rescue Tosspayments2::Rails::APIError => e
+		Rails.logger.error("Confirm error status=#{e.status} code=#{e.code}")
+		redirect_to root_path, alert: 'Payment confirm failed'
+	end
+end
+```
+
+### Callback Verification
+```ruby
+Tosspayments2::Rails::CallbackVerifier.new.match_amount?(order_id: params[:orderId], amount: params[:amount].to_i) do |oid|
+	Order.find_by!(uuid: oid).amount
+end
+```
+
+### Webhook Verification
+```ruby
+verifier = Tosspayments2::Rails::WebhookVerifier.new
+if verifier.verify?(request.raw_post, request.headers['X-TossPayments-Signature'])
+	# process JSON.parse(request.raw_post)
+else
+	head :unauthorized
+end
+```
+
+### Cancel
+```ruby
+toss_client.cancel(payment_key: 'pay_123', cancel_reason: 'customer request')
+```
+
+### Tests
+Run RSpec: `bundle exec rspec`
+
+### License
 MIT
 
 ## 기여

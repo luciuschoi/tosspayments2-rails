@@ -7,6 +7,7 @@ module Tosspayments2
   module Rails
     class Configuration
       include Singleton
+
       attr_accessor :client_key, :secret_key, :widget_version, :api_base, :timeout, :logger
 
       def initialize

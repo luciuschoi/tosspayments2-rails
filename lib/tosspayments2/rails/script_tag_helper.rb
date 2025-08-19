@@ -12,7 +12,7 @@ module Tosspayments2
         attrs << 'async' if async
         attrs << 'defer' if defer
         attrs << %(src="#{ERB::Util.html_escape(src)}")
-        ("<script #{attrs.join(' ')}></script>").html_safe
+        "<script #{attrs.join(' ')}></script>".html_safe
       end
     end
   end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'active_support/concern'
 module Tosspayments2
   module Rails
     module ControllerConcern
