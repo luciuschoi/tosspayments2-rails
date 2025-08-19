@@ -1,4 +1,12 @@
 {
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "github_token",
+      "description": "GitHub Personal Access Token",
+      "password": true
+    }
+  ],
   "servers": {
     "tosspayments-integration-guide": {
       "command": "npx",
@@ -8,6 +16,13 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github_token}"
+      }
     }
   }
 }
