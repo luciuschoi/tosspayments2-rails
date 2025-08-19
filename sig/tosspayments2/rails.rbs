@@ -1,0 +1,40 @@
+module Tosspayments2
+  module Rails
+    VERSION: String
+    module ScriptTagHelper
+      def tosspayments_script_tag: (?async: bool, ?defer: bool, ?version: String) -> String
+    end
+
+    class Configuration
+      @client_key: String?
+      @secret_key: String?
+      @widget_version: String
+      @api_base: String
+      @timeout: Integer
+      @logger: untyped
+
+      attr_accessor client_key: String?
+      attr_accessor secret_key: String?
+      attr_accessor widget_version: String
+      attr_accessor api_base: String
+      attr_accessor timeout: Integer
+      attr_accessor logger: untyped
+    end
+
+    class Client
+      def initialize: (?secret_key: String, ?api_base: String, ?timeout: Integer) -> void
+      def confirm: (payment_key: String, order_id: String, amount: Integer) -> Hash[Symbol, untyped]
+      def cancel: (payment_key: String, cancel_reason: String, ?amount: Integer) -> Hash[Symbol, untyped]
+    end
+
+    module ControllerConcern
+    end
+
+    class WebhookVerifier
+      def initialize: (?secret_key: String) -> void
+      def verify: (untyped, untyped) -> bool
+    end
+
+    def self.configure: () { (Configuration) -> void } -> Configuration
+  end
+end
