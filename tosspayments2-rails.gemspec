@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
+
 require_relative 'lib/tosspayments2/rails/version'
 
 Gem::Specification.new do |spec|
@@ -44,4 +46,5 @@ Gem::Specification.new do |spec|
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
+  # rubocop:enable Metrics/BlockLength
 end
