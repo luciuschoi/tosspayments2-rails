@@ -2,6 +2,10 @@
 
 _No changes yet._
 
+## [0.3.0] - 2025-08-21
+### Changed
+- General maintenance and improvements for release process
+
 ## [0.2.0] - 2025-08-19
 ### Added
 - WebhookVerifier HMAC (SHA256 + Base64) verification
