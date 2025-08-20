@@ -2,6 +2,12 @@
 
 _No changes yet._
 
+## [0.4.0] - 2025-08-20
+### Changed
+- Add frozen_string_literal magic comments to generator templates
+- Update .gitignore to ignore built gem artifacts (*.gem)
+- RuboCop clean; RSpec green
+
 ## [0.3.0] - 2025-08-21
 ### Changed
 - General maintenance and improvements for release process
