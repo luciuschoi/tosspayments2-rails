@@ -1,0 +1,25 @@
+<h1>결제 내역</h1>
+<table>
+  <thead>
+    <tr>
+      <th>주문번호</th>
+      <th>금액</th>
+      <th>상태</th>
+      <th>거래ID</th>
+      <th>생성일</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @payments.each do |payment| %>
+      <tr>
+        <td><%= payment.order_id %></td>
+        <td><%= payment.amount %></td>
+        <td><%= payment.status %></td>
+        <td><%= payment.transaction_id %></td>
+        <td><%= payment.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+        <td><%= link_to '상세', payment_path(payment) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

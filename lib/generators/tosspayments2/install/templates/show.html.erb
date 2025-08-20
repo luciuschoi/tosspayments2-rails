@@ -1,0 +1,9 @@
+<h1>결제 상세</h1>
+<ul>
+  <li>주문번호: <%= @payment.order_id %></li>
+  <li>금액: <%= @payment.amount %></li>
+  <li>상태: <%= @payment.status %></li>
+  <li>거래ID: <%= @payment.transaction_id %></li>
+  <li>생성일: <%= @payment.created_at.strftime('%Y-%m-%d %H:%M') %></li>
+</ul>
+<%= link_to '목록으로', payments_path %>
