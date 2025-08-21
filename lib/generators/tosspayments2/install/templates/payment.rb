@@ -2,6 +2,32 @@
 
 # 결제 정보를 저장하는 Payment 모델
 class Payment < ApplicationRecord
-  # TODO: 필요에 따라 연관관계 및 유효성 검증 추가
-  # 예시 컬럼: amount, order_id, status, transaction_id 등
+  validates :order_id, presence: true, uniqueness: true
+  validates :amount, presence: true, numericality: { greater_than: 0 }
+  validates :status, presence: true, inclusion: { in: %w[pending confirmed cancelled failed] }
+
+  scope :confirmed, -> { where(status: 'confirmed') }
+  scope :pending, -> { where(status: 'pending') }
+  scope :cancelled, -> { where(status: 'cancelled') }
+  scope :failed, -> { where(status: 'failed') }
+
+  def confirmed?
+    status == 'confirmed'
+  end
+
+  def pending?
+    status == 'pending'
+  end
+
+  def cancelled?
+    status == 'cancelled'
+  end
+
+  def failed?
+    status == 'failed'
+  end
+
+  def formatted_amount
+    "#{amount.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}원"
+  end
 end

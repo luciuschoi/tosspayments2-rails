@@ -1,9 +1,150 @@
 <h1>결제 상세</h1>
-<ul>
-  <li>주문번호: <%= @payment.order_id %></li>
-  <li>금액: <%= @payment.amount %></li>
-  <li>상태: <%= @payment.status %></li>
-  <li>거래ID: <%= @payment.transaction_id %></li>
-  <li>생성일: <%= @payment.created_at.strftime('%Y-%m-%d %H:%M') %></li>
-</ul>
-<%= link_to '목록으로', payments_path %>
+
+<div class="payment-detail">
+  <div class="card">
+    <div class="card-header">
+      <h3>결제 정보</h3>
+      <span class="badge <%= payment_status_class(@payment.status) %>">
+        <%= payment_status_text(@payment.status) %>
+      </span>
+    </div>
+    
+    <div class="card-body">
+      <dl class="row">
+        <dt class="col-sm-3">주문번호</dt>
+        <dd class="col-sm-9"><%= @payment.order_id %></dd>
+        
+        <dt class="col-sm-3">결제금액</dt>
+        <dd class="col-sm-9"><%= @payment.formatted_amount %></dd>
+        
+        <dt class="col-sm-3">결제상태</dt>
+        <dd class="col-sm-9">
+          <span class="badge <%= payment_status_class(@payment.status) %>">
+            <%= payment_status_text(@payment.status) %>
+          </span>
+        </dd>
+        
+        <% if @payment.transaction_id.present? %>
+          <dt class="col-sm-3">거래ID</dt>
+          <dd class="col-sm-9"><%= @payment.transaction_id %></dd>
+        <% end %>
+        
+        <dt class="col-sm-3">생성일시</dt>
+        <dd class="col-sm-9"><%= @payment.created_at.strftime('%Y-%m-%d %H:%M:%S') %></dd>
+        
+        <dt class="col-sm-3">최종 업데이트</dt>
+        <dd class="col-sm-9"><%= @payment.updated_at.strftime('%Y-%m-%d %H:%M:%S') %></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<div class="actions">
+  <%= link_to '목록으로', payments_path, class: 'btn btn-secondary' %>
+  
+  <% if @payment.confirmed? %>
+    <%= link_to '결제 취소', cancel_payment_path(@payment), method: :patch,
+                confirm: '정말로 이 결제를 취소하시겠습니까?',
+                class: 'btn btn-danger' %>
+  <% elsif @payment.pending? %>
+    <%= link_to '결제 계속하기', checkout_payments_path(order_id: @payment.order_id), 
+                class: 'btn btn-primary' %>
+  <% end %>
+</div>
+
+<script>
+function payment_status_class(status) {
+  switch(status) {
+    case 'confirmed': return 'bg-success';
+    case 'pending': return 'bg-warning';
+    case 'cancelled': return 'bg-secondary';
+    case 'failed': return 'bg-danger';
+    default: return 'bg-light';
+  }
+}
+
+function payment_status_text(status) {
+  switch(status) {
+    case 'confirmed': return '결제완료';
+    case 'pending': return '결제대기';
+    case 'cancelled': return '결제취소';
+    case 'failed': return '결제실패';
+    default: return status;
+  }
+}
+</script>
+
+<style>
+  .payment-detail { margin-bottom: 2rem; }
+  
+  .card { 
+    position: relative; 
+    display: flex; 
+    flex-direction: column; 
+    min-width: 0; 
+    word-wrap: break-word; 
+    background-color: #fff; 
+    background-clip: border-box; 
+    border: 1px solid rgba(0,0,0,.125); 
+    border-radius: 0.25rem; 
+  }
+  
+  .card-header { 
+    padding: 0.75rem 1.25rem; 
+    margin-bottom: 0; 
+    background-color: rgba(0,0,0,.03); 
+    border-bottom: 1px solid rgba(0,0,0,.125); 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+  }
+  
+  .card-body { padding: 1.25rem; }
+  
+  .row { display: flex; flex-wrap: wrap; margin-right: -15px; margin-left: -15px; }
+  .col-sm-3 { flex: 0 0 25%; max-width: 25%; padding-right: 15px; padding-left: 15px; }
+  .col-sm-9 { flex: 0 0 75%; max-width: 75%; padding-right: 15px; padding-left: 15px; }
+  
+  dl { margin-bottom: 1rem; }
+  dt { font-weight: 700; }
+  dd { margin-bottom: 0.5rem; margin-left: 0; }
+  
+  .badge { 
+    display: inline-block; 
+    padding: 0.25em 0.4em; 
+    font-size: 75%; 
+    font-weight: 700; 
+    line-height: 1; 
+    text-align: center; 
+    white-space: nowrap; 
+    vertical-align: baseline; 
+    border-radius: 0.25rem; 
+  }
+  
+  .bg-success { background-color: #28a745 !important; color: white; }
+  .bg-warning { background-color: #ffc107 !important; color: black; }
+  .bg-secondary { background-color: #6c757d !important; color: white; }
+  .bg-danger { background-color: #dc3545 !important; color: white; }
+  
+  .actions { margin-top: 2rem; }
+  
+  .btn { 
+    display: inline-block; 
+    padding: 0.375rem 0.75rem; 
+    margin-right: 0.5rem;
+    margin-bottom: 0; 
+    font-size: 1rem; 
+    font-weight: 400; 
+    line-height: 1.5; 
+    text-align: center; 
+    text-decoration: none; 
+    vertical-align: middle; 
+    cursor: pointer; 
+    border: 1px solid transparent; 
+    border-radius: 0.25rem; 
+  }
+  
+  .btn-primary { color: #fff; background-color: #007bff; border-color: #007bff; }
+  .btn-secondary { color: #fff; background-color: #6c757d; border-color: #6c757d; }
+  .btn-danger { color: #fff; background-color: #dc3545; border-color: #dc3545; }
+</style>

@@ -1,5 +1,10 @@
 <h1>결제 내역</h1>
-<table>
+
+<div class="mb-3">
+  <%= link_to '새 결제', new_payment_path, class: 'btn btn-primary' %>
+</div>
+
+<table class="table table-striped">
   <thead>
     <tr>
       <th>주문번호</th>
@@ -7,19 +12,82 @@
       <th>상태</th>
       <th>거래ID</th>
       <th>생성일</th>
-      <th></th>
+      <th>액션</th>
     </tr>
   </thead>
   <tbody>
-    <% @payments.each do |payment| %>
+    <% if @payments.any? %>
+      <% @payments.each do |payment| %>
+        <tr>
+          <td><%= payment.order_id %></td>
+          <td><%= payment.formatted_amount %></td>
+          <td>
+            <span class="badge <%= payment_status_class(payment.status) %>">
+              <%= payment_status_text(payment.status) %>
+            </span>
+          </td>
+          <td><%= payment.transaction_id %></td>
+          <td><%= payment.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+          <td>
+            <%= link_to '상세', payment_path(payment), class: 'btn btn-sm btn-outline-primary' %>
+            <% if payment.confirmed? %>
+              <%= link_to '취소', cancel_payment_path(payment), method: :patch, 
+                          confirm: '결제를 취소하시겠습니까?', 
+                          class: 'btn btn-sm btn-outline-danger' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% else %>
       <tr>
-        <td><%= payment.order_id %></td>
-        <td><%= payment.amount %></td>
-        <td><%= payment.status %></td>
-        <td><%= payment.transaction_id %></td>
-        <td><%= payment.created_at.strftime('%Y-%m-%d %H:%M') %></td>
-        <td><%= link_to '상세', payment_path(payment) %></td>
+        <td colspan="6" class="text-center">결제 내역이 없습니다.</td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<script>
+function payment_status_class(status) {
+  switch(status) {
+    case 'confirmed': return 'bg-success';
+    case 'pending': return 'bg-warning';
+    case 'cancelled': return 'bg-secondary';
+    case 'failed': return 'bg-danger';
+    default: return 'bg-light';
+  }
+}
+
+function payment_status_text(status) {
+  switch(status) {
+    case 'confirmed': return '완료';
+    case 'pending': return '대기중';
+    case 'cancelled': return '취소됨';
+    case 'failed': return '실패';
+    default: return status;
+  }
+}
+</script>
+
+<%# Bootstrap CSS가 없다면 기본 스타일링 %>
+<style>
+  .table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  .table th, .table td { padding: 0.75rem; border-bottom: 1px solid #dee2e6; text-align: left; }
+  .table thead th { border-bottom: 2px solid #dee2e6; }
+  .table-striped tbody tr:nth-of-type(odd) { background-color: rgba(0, 0, 0, 0.05); }
+  .btn { display: inline-block; padding: 0.375rem 0.75rem; margin-bottom: 0; font-size: 1rem; 
+         font-weight: 400; line-height: 1.5; text-align: center; text-decoration: none; 
+         vertical-align: middle; cursor: pointer; border: 1px solid transparent; border-radius: 0.25rem; }
+  .btn-primary { color: #fff; background-color: #007bff; border-color: #007bff; }
+  .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.875rem; }
+  .btn-outline-primary { color: #007bff; border-color: #007bff; }
+  .btn-outline-danger { color: #dc3545; border-color: #dc3545; }
+  .badge { display: inline-block; padding: 0.25em 0.4em; font-size: 75%; font-weight: 700; 
+           line-height: 1; text-align: center; white-space: nowrap; vertical-align: baseline; 
+           border-radius: 0.25rem; }
+  .bg-success { background-color: #28a745 !important; color: white; }
+  .bg-warning { background-color: #ffc107 !important; color: black; }
+  .bg-secondary { background-color: #6c757d !important; color: white; }
+  .bg-danger { background-color: #dc3545 !important; color: white; }
+  .mb-3 { margin-bottom: 1rem; }
+  .text-center { text-align: center; }
+</style>
