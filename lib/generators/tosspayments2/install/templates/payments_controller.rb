@@ -69,7 +69,10 @@ class PaymentsController < ApplicationController
   private
 
   def set_payment
-    @payment = Payment.find(params[:id])
+    @payment = Payment.find_by(id: params[:id])
+    return if @payment
+    
+    redirect_to payments_path, alert: '결제 정보를 찾을 수 없습니다.'
   end
 
   def payment_params

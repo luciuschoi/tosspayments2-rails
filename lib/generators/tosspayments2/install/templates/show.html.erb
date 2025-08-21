@@ -1,5 +1,6 @@
 <h1>결제 상세</h1>
 
+<%% if @payment %>
 <div class="payment-detail">
   <div class="card">
     <div class="card-header">
@@ -51,6 +52,14 @@
                 class: 'btn btn-primary' %>
   <%% end %>
 </div>
+<%% else %>
+<div class="alert alert-danger">
+  결제 정보를 찾을 수 없습니다.
+</div>
+<div class="actions">
+  <%%= link_to '목록으로', payments_path, class: 'btn btn-secondary' %>
+</div>
+<%% end %>
 
 <script>
 function payment_status_class(status) {
@@ -147,4 +156,7 @@ function payment_status_text(status) {
   .btn-primary { color: #fff; background-color: #007bff; border-color: #007bff; }
   .btn-secondary { color: #fff; background-color: #6c757d; border-color: #6c757d; }
   .btn-danger { color: #fff; background-color: #dc3545; border-color: #dc3545; }
+  
+  .alert { padding: 0.75rem 1.25rem; margin-bottom: 1rem; border: 1px solid transparent; border-radius: 0.25rem; }
+  .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
 </style>
