@@ -23,23 +23,23 @@ module Tosspayments2
 
       def create_stimulus_controller
         return unless options[:with_model]
-        
+
         # app/javascript/controllers 디렉토리 생성
         empty_directory 'app/javascript/controllers'
-        
+
         # Stimulus 컨트롤러 파일 복사
         template 'tosspayments_checkout_controller.js', 'app/javascript/controllers/tosspayments_checkout_controller.js'
       end
 
       def create_css_file
         return unless options[:with_model]
-        
+
         # app/assets/stylesheets 디렉토리 생성
         empty_directory 'app/assets/stylesheets'
-        
+
         # CSS 파일 복사
         template 'tosspayments.css', 'app/assets/stylesheets/tosspayments.css'
-        
+
         # application.css에 import 추가
         add_css_import_to_application
       end
@@ -49,7 +49,7 @@ module Tosspayments2
       def add_css_import_to_application
         application_css_path = 'app/assets/stylesheets/application.css'
         import_line = ' *= require tosspayments'
-        
+
         if File.exist?(application_css_path)
           unless File.read(application_css_path).include?(import_line)
             # application.css의 *= require_tree . 라인 바로 위에 추가
@@ -57,11 +57,10 @@ module Tosspayments2
             if content.include?('*= require_tree .')
               content.gsub!('*= require_tree .', "#{import_line}\n *= require_tree .")
               File.write(application_css_path, content)
-              say "Added tosspayments.css import to application.css", :green
             else
               append_to_file application_css_path, "\n#{import_line}\n"
-              say "Added tosspayments.css import to application.css", :green
             end
+            say 'Added tosspayments.css import to application.css', :green
           end
         else
           say "Warning: application.css not found. Please manually add '#{import_line}' to your CSS manifest.", :yellow
@@ -111,7 +110,7 @@ module Tosspayments2
       end
 
       # Thor의 hook으로 install 메서드가 자동 실행되도록 설정
-      def self.default_task
+      private_class_method def self.default_task
         :install
       end
     end

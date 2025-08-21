@@ -2,6 +2,25 @@
 
 _No changes yet._
 
+## [0.6.0] - 2025-08-21
+### Added
+- Stimulus.js controller integration for modern Rails frontend architecture
+- Automatic generation of `tosspayments_checkout_controller.js` in generator
+- CSS extraction and consolidation into `tosspayments.css` file
+- Automatic CSS import into Rails application.css asset pipeline
+
+### Changed
+- Refactored checkout.html.erb from inline JavaScript to Stimulus controller with data attributes
+- Extracted all inline styles from ERB templates (index, new, show, checkout) into unified CSS file
+- Enhanced Rails generator to create JavaScript and CSS assets automatically
+- Improved code organization following Rails 7/8 conventions with Stimulus and asset pipeline
+
+### Improved
+- Better maintainability with separated concerns (HTML, CSS, JavaScript)
+- Enhanced reusability of Stimulus controller across different pages
+- Optimized performance through asset pipeline caching
+- Modern Rails development patterns with Hotwire/Stimulus integration
+
 ## [0.5.4] - 2025-08-21
 ### Fixed
 - Fix Rails engine configuration issue where `config.tosspayments2` was undefined
