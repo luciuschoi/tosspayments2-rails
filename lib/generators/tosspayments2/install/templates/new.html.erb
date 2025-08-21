@@ -1,28 +1,28 @@
 <h1>새 결제</h1>
 
-<%= form_with(model: @payment, local: true) do |form| %>
-  <% if @payment.errors.any? %>
+<%%= form_with(model: @payment, local: true) do |form| %>
+  <%% if @payment.errors.any? %>
     <div class="alert alert-danger">
-      <h4><%= pluralize(@payment.errors.count, "error") %> 발생:</h4>
+      <h4><%%= pluralize(@payment.errors.count, "error") %> 발생:</h4>
       <ul>
-        <% @payment.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
+        <%% @payment.errors.full_messages.each do |message| %>
+          <li><%%= message %></li>
+        <%% end %>
       </ul>
     </div>
-  <% end %>
+  <%% end %>
 
   <div class="form-group">
-    <%= form.label :amount, '결제 금액' %>
-    <%= form.number_field :amount, class: 'form-control', placeholder: '예: 10000', required: true %>
+    <%%= form.label :amount, '결제 금액' %>
+    <%%= form.number_field :amount, class: 'form-control', placeholder: '예: 10000', required: true %>
     <small class="form-text text-muted">원 단위로 입력해주세요</small>
   </div>
 
   <div class="actions">
-    <%= form.submit '결제하기', class: 'btn btn-primary' %>
-    <%= link_to '취소', payments_path, class: 'btn btn-secondary' %>
+    <%%= form.submit '결제하기', class: 'btn btn-primary' %>
+    <%%= link_to '취소', payments_path, class: 'btn btn-secondary' %>
   </div>
-<% end %>
+<%% end %>
 
 <style>
   .form-group { margin-bottom: 1rem; }

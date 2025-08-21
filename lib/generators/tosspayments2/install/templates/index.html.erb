@@ -1,7 +1,7 @@
 <h1>결제 내역</h1>
 
 <div class="mb-3">
-  <%= link_to '새 결제', new_payment_path, class: 'btn btn-primary' %>
+  <%%= link_to '새 결제', new_payment_path, class: 'btn btn-primary' %>
 </div>
 
 <table class="table table-striped">
@@ -16,33 +16,33 @@
     </tr>
   </thead>
   <tbody>
-    <% if @payments.any? %>
-      <% @payments.each do |payment| %>
+    <%% if @payments.any? %>
+      <%% @payments.each do |payment| %>
         <tr>
-          <td><%= payment.order_id %></td>
-          <td><%= payment.formatted_amount %></td>
+          <td><%%= payment.order_id %></td>
+          <td><%%= payment.formatted_amount %></td>
           <td>
-            <span class="badge <%= payment_status_class(payment.status) %>">
-              <%= payment_status_text(payment.status) %>
+            <span class="badge <%%= payment_status_class(payment.status) %>">
+              <%%= payment_status_text(payment.status) %>
             </span>
           </td>
-          <td><%= payment.transaction_id %></td>
-          <td><%= payment.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+          <td><%%= payment.transaction_id %></td>
+          <td><%%= payment.created_at.strftime('%Y-%m-%d %H:%M') %></td>
           <td>
-            <%= link_to '상세', payment_path(payment), class: 'btn btn-sm btn-outline-primary' %>
-            <% if payment.confirmed? %>
-              <%= link_to '취소', cancel_payment_path(payment), method: :patch, 
+            <%%= link_to '상세', payment_path(payment), class: 'btn btn-sm btn-outline-primary' %>
+            <%% if payment.confirmed? %>
+              <%%= link_to '취소', cancel_payment_path(payment), method: :patch, 
                           confirm: '결제를 취소하시겠습니까?', 
                           class: 'btn btn-sm btn-outline-danger' %>
-            <% end %>
+            <%% end %>
           </td>
         </tr>
-      <% end %>
-    <% else %>
+      <%% end %>
+    <%% else %>
       <tr>
         <td colspan="6" class="text-center">결제 내역이 없습니다.</td>
       </tr>
-    <% end %>
+    <%% end %>
   </tbody>
 </table>
 
@@ -68,7 +68,7 @@ function payment_status_text(status) {
 }
 </script>
 
-<%# Bootstrap CSS가 없다면 기본 스타일링 %>
+<%%# Bootstrap CSS가 없다면 기본 스타일링 %>
 <style>
   .table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
   .table th, .table td { padding: 0.75rem; border-bottom: 1px solid #dee2e6; text-align: left; }

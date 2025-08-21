@@ -4,52 +4,52 @@
   <div class="card">
     <div class="card-header">
       <h3>결제 정보</h3>
-      <span class="badge <%= payment_status_class(@payment.status) %>">
-        <%= payment_status_text(@payment.status) %>
+      <span class="badge <%%= payment_status_class(@payment.status) %>">
+        <%%= payment_status_text(@payment.status) %>
       </span>
     </div>
     
     <div class="card-body">
       <dl class="row">
         <dt class="col-sm-3">주문번호</dt>
-        <dd class="col-sm-9"><%= @payment.order_id %></dd>
+        <dd class="col-sm-9"><%%= @payment.order_id %></dd>
         
         <dt class="col-sm-3">결제금액</dt>
-        <dd class="col-sm-9"><%= @payment.formatted_amount %></dd>
+        <dd class="col-sm-9"><%%= @payment.formatted_amount %></dd>
         
         <dt class="col-sm-3">결제상태</dt>
         <dd class="col-sm-9">
-          <span class="badge <%= payment_status_class(@payment.status) %>">
-            <%= payment_status_text(@payment.status) %>
+          <span class="badge <%%= payment_status_class(@payment.status) %>">
+            <%%= payment_status_text(@payment.status) %>
           </span>
         </dd>
         
-        <% if @payment.transaction_id.present? %>
+        <%% if @payment.transaction_id.present? %>
           <dt class="col-sm-3">거래ID</dt>
-          <dd class="col-sm-9"><%= @payment.transaction_id %></dd>
-        <% end %>
+          <dd class="col-sm-9"><%%= @payment.transaction_id %></dd>
+        <%% end %>
         
         <dt class="col-sm-3">생성일시</dt>
-        <dd class="col-sm-9"><%= @payment.created_at.strftime('%Y-%m-%d %H:%M:%S') %></dd>
+        <dd class="col-sm-9"><%%= @payment.created_at.strftime('%Y-%m-%d %H:%M:%S') %></dd>
         
         <dt class="col-sm-3">최종 업데이트</dt>
-        <dd class="col-sm-9"><%= @payment.updated_at.strftime('%Y-%m-%d %H:%M:%S') %></dd>
+        <dd class="col-sm-9"><%%= @payment.updated_at.strftime('%Y-%m-%d %H:%M:%S') %></dd>
       </dl>
     </div>
   </div>
 </div>
 
 <div class="actions">
-  <%= link_to '목록으로', payments_path, class: 'btn btn-secondary' %>
+  <%%= link_to '목록으로', payments_path, class: 'btn btn-secondary' %>
   
-  <% if @payment.confirmed? %>
-    <%= link_to '결제 취소', cancel_payment_path(@payment), method: :patch,
+  <%% if @payment.confirmed? %>
+    <%%= link_to '결제 취소', cancel_payment_path(@payment), method: :patch,
                 confirm: '정말로 이 결제를 취소하시겠습니까?',
                 class: 'btn btn-danger' %>
-  <% elsif @payment.pending? %>
-    <%= link_to '결제 계속하기', checkout_payments_path(order_id: @payment.order_id), 
+  <%% elsif @payment.pending? %>
+    <%%= link_to '결제 계속하기', checkout_payments_path(order_id: @payment.order_id), 
                 class: 'btn btn-primary' %>
-  <% end %>
+  <%% end %>
 </div>
 
 <script>
