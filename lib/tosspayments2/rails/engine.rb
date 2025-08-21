@@ -6,7 +6,12 @@ module Tosspayments2
     class Engine < ::Rails::Engine
       isolate_namespace Tosspayments2::Rails
 
-      initializer 'tosspayments2.configure' do |app|
+      initializer 'tosspayments2.configure', before: :load_config_initializers do |app|
+        # Ensure config accessor exists
+        unless app.config.respond_to?(:tosspayments2)
+          app.config.class.send(:attr_accessor, :tosspayments2)
+          app.config.tosspayments2 = ActiveSupport::OrderedOptions.new
+        end
         app.config.tosspayments2 ||= ActiveSupport::OrderedOptions.new
         app_cfg = app.config.tosspayments2
         ::Tosspayments2::Rails.configure do |c|

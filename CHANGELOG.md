@@ -2,6 +2,11 @@
 
 _No changes yet._
 
+## [0.5.4] - 2025-08-21
+### Fixed
+- Fix Rails engine configuration issue where `config.tosspayments2` was undefined
+- Properly define config accessor in Rails application before using it
+
 ## [0.5.3] - 2025-08-21
 ### Fixed
 - Complete fix for checkout.html.erb template with proper ERB syntax and error handling

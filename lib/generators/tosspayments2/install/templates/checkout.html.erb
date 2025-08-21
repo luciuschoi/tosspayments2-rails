@@ -8,62 +8,24 @@
 </div>
 
 <!-- TossPayments 결제 위젯 영역 -->
-<div id="payment-methods"></div>
-<div id="agreement"></div>
-<button id="payment-button" class="btn btn-primary">결제하기</button>
+<div data-controller="tosspayments-checkout"
+     data-tosspayments-checkout-client-key-value="<%%= Rails.application.credentials.dig(:tosspayments, :client_key) || ENV['TOSSPAYMENTS_CLIENT_KEY'] %>"
+     data-tosspayments-checkout-customer-key-value="customer_<%%= Time.current.to_i %>"
+     data-tosspayments-checkout-order-id-value="<%%= @payment.order_id %>"
+     data-tosspayments-checkout-order-name-value="결제 테스트 상품"
+     data-tosspayments-checkout-customer-name-value="고객"
+     data-tosspayments-checkout-amount-value="<%%= @payment.amount %>"
+     data-tosspayments-checkout-success-url-value="<%%= success_payments_url %>"
+     data-tosspayments-checkout-fail-url-value="<%%= fail_payments_url %>">
+  
+  <div id="payment-methods" data-tosspayments-checkout-target="paymentMethods"></div>
+  <div id="agreement" data-tosspayments-checkout-target="agreement"></div>
+  <button data-tosspayments-checkout-target="paymentButton" 
+          data-action="click->tosspayments-checkout#requestPayment"
+          class="btn btn-primary">결제하기</button>
+</div>
 
 <%%= tosspayments_script_tag %>
-
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  // TossPayments 설정
-  const clientKey = '<%%= Rails.application.credentials.dig(:tosspayments, :client_key) || ENV["TOSSPAYMENTS_CLIENT_KEY"] %>';
-  const customerKey = 'customer_<%%= Time.current.to_i %>'; // 구매자 식별값
-  
-  if (!clientKey) {
-    console.error('TossPayments 클라이언트 키가 설정되지 않았습니다.');
-    alert('결제 서비스를 초기화할 수 없습니다. 관리자에게 문의하세요.');
-    return;
-  }
-
-  try {
-    // TossPayments 위젯 초기화
-    const tosspayments = TossPayments(clientKey);
-    const widgets = tosspayments.widgets({ customerKey: customerKey });
-
-    // 결제 수단 렌더링
-    await widgets.renderPaymentMethods({
-      selector: '#payment-methods',
-      variantKey: 'DEFAULT'
-    });
-
-    // 약관 동의 렌더링
-    await widgets.renderAgreement({
-      selector: '#agreement'
-    });
-
-    // 결제 버튼 이벤트 리스너
-    document.getElementById('payment-button').addEventListener('click', async () => {
-      try {
-        await widgets.requestPayment({
-          orderId: '<%%= @payment.order_id %>',
-          orderName: '결제 테스트 상품',
-          customerName: '고객',
-          amount: <%%= @payment.amount %>,
-          successUrl: '<%%= success_payments_url %>',
-          failUrl: '<%%= fail_payments_url %>'
-        });
-      } catch (error) {
-        console.error('결제 요청 실패:', error);
-        alert('결제 요청에 실패했습니다: ' + (error.message || error.toString()));
-      }
-    });
-  } catch (error) {
-    console.error('TossPayments 초기화 실패:', error);
-    alert('결제 서비스 초기화에 실패했습니다: ' + (error.message || error.toString()));
-  }
-});
-</script>
 
 <%% else %>
 <div class="alert alert-danger">

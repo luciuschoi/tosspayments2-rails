@@ -21,6 +21,16 @@ module Tosspayments2
         template 'payments_helper.rb', 'app/helpers/payments_helper.rb'
       end
 
+      def create_stimulus_controller
+        return unless options[:with_model]
+        
+        # app/javascript/controllers 디렉토리 생성
+        empty_directory 'app/javascript/controllers'
+        
+        # Stimulus 컨트롤러 파일 복사
+        template 'tosspayments_checkout_controller.js', 'app/javascript/controllers/tosspayments_checkout_controller.js'
+      end
+
       def create_payment_model_and_migration
         return unless options[:with_model]
 
@@ -58,6 +68,7 @@ module Tosspayments2
       # 제너레이터 실행 시 자동으로 모델/마이그레이션/뷰 생성
       def install
         create_payment_model_and_migration
+        create_stimulus_controller
         add_payments_route
       end
 
