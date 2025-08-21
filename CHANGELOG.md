@@ -2,6 +2,17 @@
 
 _No changes yet._
 
+## [0.5.2] - 2025-08-21
+### Fixed
+- Fix NoMethodError in checkout.html.erb template when @payment is nil
+- Add proper nil handling and error messages for missing payment in checkout flow
+
+## [0.5.1] - 2025-08-21
+### Fixed
+- Fix NoMethodError in show.html.erb template when @payment is nil
+- Add proper error handling in PaymentsController#set_payment method
+- Add conditional rendering and error message for missing payment records
+
 ## [0.5.0] - 2025-08-21
 ### Added
 - Complete PaymentsController with full CRUD operations (index, show, new, create, checkout, success, fail, cancel)
