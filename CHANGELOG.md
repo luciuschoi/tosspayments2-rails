@@ -2,6 +2,28 @@
 
 _No changes yet._
 
+## [0.5.0] - 2025-08-21
+### Added
+- Complete PaymentsController with full CRUD operations (index, show, new, create, checkout, success, fail, cancel)
+- Enhanced Payment model with validations, scopes, and helper methods
+- New view templates: new.html.erb, checkout.html.erb with TossPayments v2 widget integration
+- PaymentsHelper with status and currency formatting utilities
+- Improved route configuration with collection and member routes
+- Rails credentials support in initializer (fallback to environment variables)
+- Comprehensive checkout flow with actual TossPayments widget implementation
+
+### Changed
+- Updated Rails migration version from 6.0 to 7.0 for Rails 7/8 compatibility
+- Enhanced generator to create complete payment system structure
+- Improved view templates with better styling and user experience
+- Refactored PaymentsController to reduce complexity and improve maintainability
+- Enhanced error handling and payment status management
+
+### Fixed
+- RuboCop violations in generated templates
+- Missing routes for payment workflow
+- Incomplete payment flow implementation
+
 ## [0.4.0] - 2025-08-20
 ### Changed
 - Add frozen_string_literal magic comments to generator templates
