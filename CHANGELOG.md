@@ -2,6 +2,10 @@
 
 _No changes yet._
 
+## [0.5.3] - 2025-08-21
+### Fixed
+- Complete fix for checkout.html.erb template with proper ERB syntax and error handling
+
 ## [0.5.2] - 2025-08-21
 ### Fixed
 - Fix NoMethodError in checkout.html.erb template when @payment is nil
